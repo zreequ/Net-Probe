@@ -1,5 +1,3 @@
-Here's a **README.md** guide for your GitHub repository to help users run your project.  
-
 ---
 
 # **Network Traffic Analyzer**  
