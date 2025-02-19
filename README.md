@@ -20,8 +20,8 @@ A web-based **Network Traffic Analyzer** that processes **PCAP** files to extrac
 
 ### **1. Clone the repository**  
 ```bash
-git clone https://github.com/your-username/network-traffic-analyzer.git
-cd network-traffic-analyzer
+git clone https://github.com/zreequ/Net-Probe.git
+cd Net-Probe
 ```
 
 ### **2. Install dependencies**  
