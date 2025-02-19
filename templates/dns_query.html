@@ -1,0 +1,206 @@
+{% extends "base.html" %} 
+{% block body %}
+
+<div class="main-panel">
+  <div class="content-wrapper">
+    <div class="row" id="proBanner">
+      <div class="col-12"></div>
+    </div>
+    <div class="d-xl-flex justify-content-between align-items-start">
+      <h2 class="text-dark font-weight-bold mb-2">DNS Queries Overview</h2>
+      <div class="d-sm-flex justify-content-xl-between align-items-center mb-2">
+        <div class="dropdown ml-0 ml-md-4 mt-2 mt-lg-0">
+          <button
+            class="btn bg-white p-3 d-flex align-items-center"
+            type="button"
+            id="dropdownMenuButton1"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            24 Mar 2019 - 24 Mar 2019
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+      <div class="row">
+             
+        <div class="col-lg-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">DNS Queries</h4>
+               
+              
+                <table class="table table-hover table-secondary">
+                  <thead style="background:green">
+                    <tr>
+                      <th>#</th>
+                      <th>Domain</th>
+                     
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+                    {% for query in dns_queries %}
+                      <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ query }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                  
+                   
+                  
+                </table>
+              </div>
+            </div>
+          </div>
+
+          
+ 
+          <div class="col-lg-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">DNS Queries Distribution</h4>
+                <canvas id="dnsChart"></canvas>
+              </div>
+            </div>
+
+            
+          
+  </div>
+
+  <div class="col-lg-6 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">DNS Queries Distribution (Pie Chart)</h4>
+        <canvas id="dnsPieChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var dnsQueries = {{ dns_queries|tojson }};
+      var domains = [];
+      var domainCounts = {};
+  
+      dnsQueries.forEach(function (query) {
+        if (domains.includes(query)) {
+          domainCounts[query]++;
+        } else {
+          domains.push(query);
+          domainCounts[query] = 1;
+        }
+      });
+  
+      var colors = generateRandomColors(domains.length); // Function to generate random colors
+  
+      var ctx = document.getElementById('dnsPieChart').getContext('2d');
+      var dnsPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: domains,
+          datasets: [{
+            data: domains.map(function (domain) {
+              return domainCounts[domain];
+            }),
+            backgroundColor: colors,
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        }
+      });
+    });
+  </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var dnsQueries = {{ dns_queries|tojson }};
+      var domains = [];
+      var domainCounts = {};
+  
+      dnsQueries.forEach(function (query) {
+        if (domains.includes(query)) {
+          domainCounts[query]++;
+        } else {
+          domains.push(query);
+          domainCounts[query] = 1;
+        }
+      });
+  
+      var colors = generateRandomColors(domains.length); // Function to generate random colors
+  
+      var ctx = document.getElementById('dnsChart').getContext('2d');
+      var dnsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: domains,
+          datasets: [{
+            label: 'Query Count',
+            data: domains.map(function (domain) {
+              return domainCounts[domain];
+            }),
+            backgroundColor: colors,
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+    });
+  
+    function generateRandomColors(count) {
+      var colors = [];
+      for (var i = 0; i < count; i++) {
+        var color = 'rgba(' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ', 0.5)';
+        colors.push(color);
+      }
+      return colors;
+    }
+  </script>
+  
+
+
+  
+    
+    
+    
+
+            <script>
+              var currentDateTime = new Date().toLocaleString();
+
+              document.getElementById("dropdownMenuButton1").innerHTML =
+                currentDateTime;
+            </script>
+
+            {% endblock body %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+  </div>
+</div>

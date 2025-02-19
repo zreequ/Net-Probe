@@ -1,0 +1,103 @@
+{% extends "base.html" %} {% block body %}
+
+<div class="main-panel">
+  <div class="content-wrapper">
+    <div class="row" id="proBanner">
+      <div class="col-12"></div>
+    </div>
+    <div class="d-xl-flex justify-content-between align-items-start">
+      <h2 class="text-dark font-weight-bold mb-2">Open Ports Overview</h2>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Open Ports Distribution</h4>
+            <canvas id="openPortsChart" width="400" height="400"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Open Ports Table</h4>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Port Number</th>
+                  <th>Frequency</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for port in open_ports %}
+                <tr>
+                  <td>{{ port }}</td>
+                  <td>{{ open_ports.count(port) }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Include Chart.js library -->
+<!-- Include Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // Extract data for visualization
+  var openPortsData = {{ open_ports | tojson }};
+
+  // Prepare data for chart
+  var portNumbers = openPortsData;
+  var portFrequencies = portNumbers.map(port => openPortsData.filter(p => p === port).length);
+
+  // Generate random colors for each bar
+  var colors = generateRandomColors(portNumbers.length);
+
+  // Create a bar chart for open ports distribution
+  var openPortsCtx = document.getElementById('openPortsChart').getContext('2d');
+  var openPortsChart = new Chart(openPortsCtx, {
+    type: 'bar',
+    data: {
+      labels: portNumbers,
+      datasets: [{
+        label: 'Open Ports Frequency',
+        data: portFrequencies,
+        backgroundColor: colors, // Assign random colors to bars
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      },
+      responsive: false,
+      maintainAspectRatio: false
+    }
+  });
+
+  // Function to generate random colors
+  function generateRandomColors(count) {
+    var colors = [];
+    for (var i = 0; i < count; i++) {
+      var color = 'rgba(' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ', 0.6)';
+      colors.push(color);
+    }
+    return colors;
+  }
+</script>
+
+{% endblock body %}

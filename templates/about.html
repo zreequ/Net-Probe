@@ -1,0 +1,45 @@
+{% extends "base1.html" %}
+{% block body %}
+    <div class="container">
+      <div class="page-banner">
+        <div class="row justify-content-center align-items-center h-100">
+          <div class="col-md-6">
+            <nav aria-label="Breadcrumb">
+              <ul class="breadcrumb justify-content-center py-0 bg-transparent">
+                <li class="breadcrumb-item"><a href="{{url_for('index')}}">Home</a></li>
+                <li class="breadcrumb-item active">About</li>
+              </ul>
+            </nav>
+            <h1 class="text-center">About Us</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 py-3">
+          <h2 class="title-section"> The Best Network Packet Analyzer Service Provider</h2>
+          <div class="divider"></div>
+
+          <p> We provide a powerful & convenient network packet analyzer to help
+            you tackle your network issues and increase performance.</p>
+          
+          <p>Our tool supports various network packet file formats like .pcap
+            and .pcapng, allowing you to analyze quickly and efficiently.</p>
+        </div>
+        <div class="col-lg-6 py-3">
+          <div class="img-fluid py-3 text-center">
+            <img src="../assets/img/about_frame.png" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-section"> <div class="container"> <div class="text-center wow fadeInUp"> <div class="subhead">Pricing Plan</div> <h2 class="title-section">Choose the right plan for your network</h2> <div class="divider mx-auto"></div> </div> <div class="row mt-5"> <div class="col-lg-4 py-3 wow zoomIn"> <div class="card-pricing"> <div class="header"> <div class="pricing-type">Basic</div> <div class="price"> <span class="dollar">$</span> <h1>19<span class="suffix">.99</span></h1> </div> <h5>Per Month</h5> </div> <div class="body"> <p>100 MB <span class="suffix">Packet Data</span></p> <p>5 <span class="suffix">Users</span></p> <p>10 <span class="suffix">Reports</span></p> <p>Basic <span class="suffix">Support</span></p> </div> <div class="footer"> <a href="#" class="btn btn-pricing btn-block">Subscribe</a> </div> </div> </div> <div class="col-lg-4 py-3 wow zoomIn"> <div class="card-pricing marked"> <div class="header"> <div class="pricing-type">Standard</div> <div class="price"> <span class="dollar">$</span> <h1>49<span class="suffix">.99</span></h1> </div> <h5>Per Month</h5> </div> <div class="body"> <p>500 MB <span class="suffix">Packet Data</span></p> <p>10 <span class="suffix">Users</span></p> <p>50 <span class="suffix">Reports</span></p> <p>Priority <span class="suffix">Support</span></p> </div> <div class="footer"> <a href="#" class="btn btn-pricing btn-block">Subscribe</a> </div> </div> </div> <div class="col-lg-4 py-3 wow zoomIn"> <div class="card-pricing"> <div class="header"> <div class="pricing-type">Professional</div> <div class="price"> <span class="dollar">$</span> <h1>99<span class="suffix">.99</span></h1> </div> <h5>Per Month</h5> </div> <div class="body"> <p>2 GB <span class="suffix">Packet Data</span></p> <p>20 <span class="suffix">Users</span></p> <p>100 <span class="suffix">Reports</span></p> <p>Premium <span class="suffix">Support</span></p> </div> <div class="footer"> <a href="#" class="btn btn-pricing btn-block">Subscribe</a> </div> </div> </div> </div> </div> <!-- .container --> </div>
+  <!-- .page-section -->
+  
+  {% endblock body %}

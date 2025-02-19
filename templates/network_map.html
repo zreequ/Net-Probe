@@ -1,0 +1,216 @@
+{% extends "base.html" %} {% block body %}
+
+<div class="main-panel">
+  <div class="content-wrapper">
+    <div class="row" id="proBanner">
+      <div class="col-12"></div>
+    </div>
+    <div class="d-xl-flex justify-content-between align-items-start">
+      <h2 class="text-dark font-weight-bold mb-2">Network Map Overview</h2>
+    </div>
+
+    <!-- Visualization Section -->
+    <div class="row">
+      <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Connections from Source IPs</h4>
+            <canvas id="sourceIPChart" width="400" height="400"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Connections to Destination IPs</h4>
+            <canvas id="destinationIPChart" width="400" height="400"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Most Common Destination IPs</h4>
+            <canvas
+              id="commonDestinationIPChart"
+              width="400"
+              height="400"
+            ></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Connection Frequency Over Time</h4>
+            <canvas
+              id="connectionFrequencyChart"
+              width="400"
+              height="400"
+            ></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Visualization Section -->
+
+    <!-- Table Section -->
+    <div class="row">
+      <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Network Map Data</h4>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Source IP</th>
+                    <th>Destination IP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for source_ip, dest_ips in network_map.items() %} {% for
+                  dest_ip in dest_ips %}
+                  <tr>
+                    <td>{{ source_ip }}</td>
+                    <td>{{ dest_ip }}</td>
+                  </tr>
+                  {% endfor %} {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Table Section -->
+  </div>
+</div>
+</div>
+
+<!-- Include Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // JavaScript code for charts
+
+    // Extract data for visualization
+    var networkMapData = {{ network_map | tojson }};
+
+    // Prepare data for visualization
+    var sourceIPs = Object.keys(networkMapData);
+    var destinationIPs = Object.values(networkMapData).flat();
+
+    // Count the frequency of connections from each source IP
+    var sourceIPFrequency = {};
+    sourceIPs.forEach(ip => {
+      sourceIPFrequency[ip] = (sourceIPFrequency[ip] || 0) + 1;
+    });
+
+    // Count the frequency of connections to each destination IP
+    var destinationIPFrequency = {};
+    destinationIPs.forEach(ip => {
+      destinationIPFrequency[ip] = (destinationIPFrequency[ip] || 0) + 1;
+    });
+
+    // Find the most common destination IPs
+    var commonDestinationIPs = Object.keys(destinationIPFrequency).sort((a, b) => destinationIPFrequency[b] - destinationIPFrequency[a]).slice(0, 5);
+    var commonDestinationIPFrequency = commonDestinationIPs.map(ip => destinationIPFrequency[ip]);
+
+    // Create data for charts
+    var sourceIPLabels = Object.keys(sourceIPFrequency);
+    var sourceIPData = Object.values(sourceIPFrequency);
+
+    var destinationIPLabels = Object.keys(destinationIPFrequency);
+    var destinationIPData = Object.values(destinationIPFrequency);
+
+    // Create a bar chart for connections from source IPs
+    var sourceIPCtx = document.getElementById('sourceIPChart').getContext('2d');
+    var sourceIPChart = new Chart(sourceIPCtx, {
+      type: 'bar',
+      data: {
+        labels: sourceIPLabels,
+        datasets: [{
+          label: 'Connections from Source IPs',
+          data: sourceIPData,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        },
+        responsive: false,
+        maintainAspectRatio: false
+      }
+    });
+
+    // Create a bar chart for connections to destination IPs
+    var destinationIPCtx = document.getElementById('destinationIPChart').getContext('2d');
+    var destinationIPChart = new Chart(destinationIPCtx, {
+      type: 'bar',
+      data: {
+        labels: destinationIPLabels,
+        datasets: [{
+          label: 'Connections to Destination IPs',
+          data: destinationIPData,
+          backgroundColor: 'rgba(255, 99, 132, 0.6)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        },
+        responsive: false,
+        maintainAspectRatio: false
+      }
+    });
+
+    // Create a bar chart for most common destination IPs
+    var commonDestinationIPCtx = document.getElementById('commonDestinationIPChart').getContext('2d');
+    var commonDestinationIPChart = new Chart(commonDestinationIPCtx, {
+      type: 'bar',
+      data: {
+        labels: commonDestinationIPs,
+        datasets: [{
+          label: 'Most Common Destination IPs',
+          data: commonDestinationIPFrequency,
+          backgroundColor: 'rgba(255, 206, 86, 0.6)',
+          borderColor: 'rgba(255, 206, 86, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        },
+        responsive: false,
+        maintainAspectRatio: false
+      }
+    });
+
+    // Additional charts can be added similarly
+</script>
+
+{% endblock body %}

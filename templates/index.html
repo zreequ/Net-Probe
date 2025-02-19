@@ -1,0 +1,270 @@
+
+
+
+
+{% if not session['user_id'] %} {% include 'login.html' %} {% else %}
+{% extends "base1.html" %}
+ {% block body %}
+
+ <div class="container text-center">
+  <div id="refreshDivID">
+    <div class="reloaded-divs">
+      {% if response %}
+      <div
+        class="alert alert-danger alert-dismissible fade show"
+        role="alert"
+      >
+        <strong></strong>{{response}}
+
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="container">
+    <div class="page-banner home-banner">
+      <div class="row align-items-center flex-wrap-reverse h-100">
+        <div class="col-md-6 py-5 wow fadeInLeft">
+          <h1 class="mb-4">Let's Check and Optimize your Network!</h1>
+          <p class="text-lg text-grey mb-5">
+            Easily analyze and optimize your network packets with our powerful tool.
+          </p>
+          <a href="#" class="btn btn-primary btn-split"
+            >Watch Video
+            <div class="fab"><span class="mai-play"></span></div
+          ></a>
+        </div>
+        <div class="col-md-6 py-5 wow zoomIn">
+          <div class="img-fluid text-center">
+            <img src="../static/assets1/img/banner_image_1.svg" alt="" />
+          </div>
+        </div>
+      </div>
+      <a href="#about" class="btn-scroll" data-role="smoothscroll"
+        ><span class="mai-arrow-down"></span
+      ></a>
+    </div>
+  </div>
+</header>
+
+
+
+
+
+
+<div class="page-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card-service wow fadeInUp">
+          <div class="header">
+            <img src="../static/assets1/img/services/service-1.svg" alt="" />
+          </div>
+          <div class="body">
+            <h5 class="text-secondary">Method 1: Upload Pcap Files</h5>
+            <p>
+              Upload your .pcap or .pcapng files captured earlier to analyze and
+              view detailed network reports
+            </p>
+            <a href="#" class="btn btn-primary">Learn More</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card-service wow fadeInUp">
+          <div class="header">
+            <img src="../static/assets1/img/services/service-2.svg" alt="" />
+          </div>
+          <div class="body">
+            <h5 class="text-secondary">Method 2: Live Device Capture</h5>
+            <p>
+              Analyze live data through our platform by directly connecting to
+              your network device, and capturing packets for real-time analysis
+            </p>
+            <a href="#" class="btn btn-primary">Learn More</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card-service wow fadeInUp">
+          <div class="header">
+            <img src="../static/assets1/img/services/service-3.svg" alt="" />
+          </div>
+          <div class="body">
+            <h5 class="text-secondary">Method 3: Filtered Pcap Review</h5>
+            <p>
+              Capture packets with specific filters and only upload the results
+              for a more targeted analysis
+            </p>
+            <a href="#" class="btn btn-primary">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- .container -->
+</div>
+<!-- .page-section -->
+
+
+<div class="page-section banner-seo-check">
+  <div
+    class="wrap bg-image"
+    style="background-image: url(../static/assets1/img/bg_pattern.svg)"
+  >
+    <div class="container text-center">
+      <div class="row justify-content-center wow fadeInUp">
+        <div class="col-lg-8">
+          <h2 class="mb-4">Check your Website Network</h2>
+          <form action="/analyze" method="post" enctype="multipart/form-data">
+            <input
+              type="file"
+              class="form-control"
+              placeholder="E.g google.com"
+              name="pcap-file"
+            />
+            <button type="submit" class="btn btn-success">Check Now</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- .container -->
+  </div>
+  <!-- .wrap -->
+</div>
+<!-- .page-section -->
+
+<div class="page-section" id="about">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 py-3 wow fadeInUp">
+        <span class="subhead">About us</span>
+        <h2 class="title-section"> The Best Network Packet Analyzer Service Provider</h2>
+        <div class="divider"></div>
+
+        <p> We provide a powerful & convenient network packet analyzer to help
+          you tackle your network issues and increase performance.</p>
+        
+        <p>Our tool supports various network packet file formats like .pcap
+          and .pcapng, allowing you to analyze quickly and efficiently.</p>
+        <a href="{{url_for('about')}}" class="btn btn-primary mt-3">Read More</a>
+      </div>
+      <div class="col-lg-6 py-3 wow fadeInRight">
+        <div class="img-fluid py-3 text-center">
+          <img src="../static/assets1/img/about_frame.png" alt="" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- .container -->
+</div>
+<!-- .page-section -->
+
+<div class="page-section bg-light"> <div class="container"> <div class="row"> <div class="col-sm-6 col-lg-4 col-xl-3 py-3 wow zoomIn"> <div class="features"> <div class="header mb-3"> <span class="mai-vert"></span> </div> <h5>Packet Inspection</h5> <p> We perform real-time packet inspection to assess and monitor network traffic. </p> </div> </div> <div class="col-sm-6 col-lg-4 col-xl-3 py-3 wow zoomIn"> <div class="features"> <div class="header mb-3"> <span class="mai-trending-up"></span> </div> <h5>Traffic Analysis</h5> <p> Gain insights into network performance, identifying congestions, and optimize traffic flow. </p> </div> </div> <div class="col-sm-6 col-lg-4 col-xl-3 py-3 wow zoomIn"> <div class="features"> <div class="header mb-3"> <span class="mai-alert-circle"></span> </div> <h5>Anomaly Detection</h5> <p> Detect and alert you for malicious or suspicious activities in real-time. </p> </div> </div> <div class="col-sm-6 col-lg-4 col-xl-3 py-3 wow zoomIn"> <div class="features"> <div class="header mb-3"> <span class="mai-search"></span> </div> <h5>Packet Decoding</h5> <p> Decipher raw network packets, understand protocols and extract useful data and intelligence. </p> </div> </div> <div class="col-sm-6 col-lg-4 col-xl-3 py-3 wow zoomIn"> <div class="features"> <div class="header mb-3"> <span class="mai-sync"></span> </div> <h5>Bandwidth Monitoring</h5> <p> Monitor and manage network bandwidth distribution, and visualize usage patterns. </p> </div> </div> <div class="col-sm-6 col-lg-4 col-xl-3 py-3 wow zoomIn"> <div class="features"> <div class="header mb-3"> <span class="mai-lock"></span> </div> <h5>Security Monitoring</h5> <p> Track and strengthen your network security, and ensure regulatory compliance. </p> </div> </div> <div class="col-sm-6 col-lg-4 col-xl-3 py-3 wow zoomIn"> <div class="features"> <div class="header mb-3"> <span class="mai-server"></span> </div> <h5>Network Device Interoperability</h5> <p> Test network devices compatibility, validate protocols and ensure seamless integrations. </p> </div> </div> <div class="col-sm-6 col-lg-4 col-xl-3 py-3 wow zoomIn"> <div class="features"> <div class="header mb-3"> <span class="mai-code"></span> </div> <h5>Custom Data Extraction</h5> <p> Create custom rules to extract and analyze specific data fields, enhancing your analysis. </p> </div> </div> </div> </div> </div> <!-- .container --> </div>
+<!-- .page-section -->
+
+
+
+<div class="page-section"> <div class="container"> <div class="text-center wow fadeInUp"> <div class="subhead">Pricing Plan</div> <h2 class="title-section">Choose the right plan for your network</h2> <div class="divider mx-auto"></div> </div> <div class="row mt-5"> <div class="col-lg-4 py-3 wow zoomIn"> <div class="card-pricing"> <div class="header"> <div class="pricing-type">Basic</div> <div class="price"> <span class="dollar">$</span> <h1>19<span class="suffix">.99</span></h1> </div> <h5>Per Month</h5> </div> <div class="body"> <p>100 MB <span class="suffix">Packet Data</span></p> <p>5 <span class="suffix">Users</span></p> <p>10 <span class="suffix">Reports</span></p> <p>Basic <span class="suffix">Support</span></p> </div> <div class="footer"> <a href="#" class="btn btn-pricing btn-block">Subscribe</a> </div> </div> </div> <div class="col-lg-4 py-3 wow zoomIn"> <div class="card-pricing marked"> <div class="header"> <div class="pricing-type">Standard</div> <div class="price"> <span class="dollar">$</span> <h1>49<span class="suffix">.99</span></h1> </div> <h5>Per Month</h5> </div> <div class="body"> <p>500 MB <span class="suffix">Packet Data</span></p> <p>10 <span class="suffix">Users</span></p> <p>50 <span class="suffix">Reports</span></p> <p>Priority <span class="suffix">Support</span></p> </div> <div class="footer"> <a href="#" class="btn btn-pricing btn-block">Subscribe</a> </div> </div> </div> <div class="col-lg-4 py-3 wow zoomIn"> <div class="card-pricing"> <div class="header"> <div class="pricing-type">Professional</div> <div class="price"> <span class="dollar">$</span> <h1>99<span class="suffix">.99</span></h1> </div> <h5>Per Month</h5> </div> <div class="body"> <p>2 GB <span class="suffix">Packet Data</span></p> <p>20 <span class="suffix">Users</span></p> <p>100 <span class="suffix">Reports</span></p> <p>Premium <span class="suffix">Support</span></p> </div> <div class="footer"> <a href="#" class="btn btn-pricing btn-block">Subscribe</a> </div> </div> </div> </div> </div> <!-- .container --> </div>
+<!-- .page-section -->
+
+<!-- Banner info -->
+<div class="page-section banner-info"> <div class="wrap bg-image" style="background-image: url(../static/assets1/img/bg_pattern.svg)" > <div class="container"> <div class="row align-items-center"> <div class="col-lg-6 py-3 pr-lg-5 wow fadeInUp"> <h2 class="title-section"> Packet Analyzer to <br /> Enhance Network </h2> <div class="divider"></div> <p> Our experienced team offers precise and intuitive network packet analysis tools for businesses, assisting with understanding and optimizing network performance. </p>
+<ul class="theme-list theme-list-light text-white">
+  <li>
+  <div class="h5">Real-time Packet Analysis</div>
+  <p>
+      Observe, dissect, and comprehend network activity in real-time
+      for thorough diagnostics.
+  </p>
+  </li>
+  <li>
+  <div class="h5">Traffic Analysis & Optimization</div>
+  <p>
+      Optimize and balance network traffic flow, improving overall
+      network efficiency.
+  </p>
+  </li>
+</ul>
+</div>
+<div class="col-lg-6 py-3 wow fadeInRight">
+<div class="img-fluid text-center">
+  <img src="../static/assets1/img/banner_image_2.svg" alt="" />
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- .wrap -->
+<!-- .page-section -->
+
+<!-- Blog -->
+<div class="page-section"> <div class="container"> <div class="text-center wow fadeInUp"> <div class="subhead">Our Blog</div> <h2 class="title-section">Latest News & Updates</h2> <div class="divider mx-auto"></div> </div>
+<div class="row mt-5">
+  <div class="col-lg-4 py-3 wow fadeInUp">
+      <div class="card-blog">
+          <div class="header">
+              <div class="post-thumb">
+                  <img src="../static/assets1/img/blog/blog-4.jpg" alt="Packet Analyzer Tutorial" />
+              </div>
+          </div>
+          <div class="body">
+              <h5 class="post-title">
+                  <a href="#">Packet Analyzer Tutorial</a>
+              </h5>
+              <div class="post-date">Posted on <a href="#">20 Feb 2023</a></div>
+          </div>
+      </div>
+  </div>
+
+  <div class="col-lg-4 py-3 wow fadeInUp">
+      <div class="card-blog">
+          <div class="header">
+              <div class="post-thumb">
+                  <img src="../static/assets1/img/blog/blog-2.jpg" alt="Optimizing Network Performance" />
+              </div>
+          </div>
+          <div class="body">
+              <h5 class="post-title">
+                  <a href="#">Optimizing Network Performance with Packet Analysis</a>
+              </h5>
+              <div class="post-date">Posted on <a href="#">15 Mar 2023</a></div>
+          </div>
+      </div>
+  </div>
+
+  <div class="col-lg-4 py-3 wow fadeInUp">
+      <div class="card-blog">
+          <div class="header">
+              <div class="post-thumb">
+                  <img src="../static/assets1/img/blog/blog-3.jpg" alt="Troubleshooting Guide" />
+              </div>
+          </div>
+          <div class="body">
+              <h5 class="post-title">
+                  <a href="#">Comprehensive Troubleshooting Guide using Packet Analysis</a>
+              </h5>
+              <div class="post-date">Posted on <a href="#">13 Apr 2023</a></div>
+          </div>
+      </div>
+  </div>
+
+  <div class="col-12 mt-4 text-center wow fadeInUp">
+      <a href="blog.html" class="btn btn-primary">View More</a>
+  </div>
+</div>
+</div>
+</div>
+{% endblock body %}
+{% endif %}

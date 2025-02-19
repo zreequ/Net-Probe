@@ -1,0 +1,351 @@
+{% extends "base.html" %} {% block body %}
+
+<div class="main-panel">
+  <div class="content-wrapper">
+    <div class="row" id="proBanner">
+      <div class="col-12"></div>
+    </div>
+    <div class="d-xl-flex justify-content-between align-items-start">
+      <h2 class="text-dark font-weight-bold mb-2">SSL/TLS SESSION Overview</h2>
+      <div class="d-sm-flex justify-content-xl-between align-items-center mb-2">
+        <div class="dropdown ml-0 ml-md-4 mt-2 mt-lg-0">
+          <button
+            class="btn bg-white p-3 d-flex align-items-center"
+            type="button"
+            id="dropdownMenuButton1"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            24 Mar 2019 - 24 Mar 2019
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">SSL/TLS SESSION</h4>
+            <table class="table table-hover table-secondary">
+              <thead style="background: green">
+                <tr>
+                  <th>Source Port</th>
+                  <th>Destination Port</th>
+                  <th>Sequence Number</th>
+                  <th>Acknowledgment Number</th>
+                  <th>Flags</th>
+                  <th>Payload Length</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for packet in ssl_tls_sessions %}
+                <tr>
+                  <td>{{ packet["Source Port"] }}</td>
+                  <td>{{ packet["Destination Port"] }}</td>
+                  <td>{{ packet["Sequence Number"] }}</td>
+                  <td>{{ packet["Acknowledgment Number"] }}</td>
+                  <td>{{ packet["Flags"] }}</td>
+                  <td>{{ packet["Payload Length"] }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-6 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Distribution of Destination Ports</h4>
+              <canvas
+                id="destinationPortsChart"
+                width="400"
+                height="400"
+              ></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Distribution of Flags</h4>
+              <canvas id="flagsChart" width="400" height="400"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Top 10 Destination Ports</h4>
+              <canvas id="topPortsChart" width="400" height="400"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">
+                Distribution of Destination Ports Over Time
+              </h4>
+              <canvas id="portsOverTimeChart" width="400" height="400"></canvas>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Radar Chart for Sequence Numbers -->
+<div class="col-lg-6 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Radar Chart for Sequence Numbers</h4>
+        <canvas id="sequenceNumbersRadarChart" width="400" height="400"></canvas>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Scatter Plot for Payload Length vs Sequence Number -->
+  <div class="col-lg-6 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Scatter Plot for Payload Length vs Sequence Number</h4>
+        <canvas id="scatterPlot" width="400" height="400"></canvas>
+      </div>
+    </div>
+  </div>
+  
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Include Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+    
+  // Extract data for visualization
+  var sourcePorts = [];
+  var destinationPorts = [];
+  var sequenceNumbers = [];
+  var acknowledgmentNumbers = [];
+  var flags = [];
+  var payloadLengths = [];
+
+  {% for packet in ssl_tls_sessions %}
+      sourcePorts.push('{{ packet["Source Port"] }}');
+      destinationPorts.push('{{ packet["Destination Port"] }}');
+      sequenceNumbers.push('{{ packet["Sequence Number"] }}');
+      acknowledgmentNumbers.push('{{ packet["Acknowledgment Number"] }}');
+      flags.push('{{ packet["Flags"] }}');
+      payloadLengths.push('{{ packet["Payload Length"] }}');
+  {% endfor %}
+
+  // Create a doughnut chart for distribution of destination ports
+  var destinationPortsCtx = document.getElementById('destinationPortsChart').getContext('2d');
+  var destinationPortsChart = new Chart(destinationPortsCtx, {
+      type: 'doughnut',
+      data: {
+          labels: destinationPorts,
+          datasets: [{
+              label: 'Distribution of Destination Ports',
+              data: destinationPorts,
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.6)',
+                  'rgba(54, 162, 235, 0.6)',
+                  'rgba(255, 206, 86, 0.6)',
+                  'rgba(75, 192, 192, 0.6)',
+                  'rgba(153, 102, 255, 0.6)',
+                  'rgba(255, 159, 64, 0.6)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          responsive: false,
+          maintainAspectRatio: false
+      }
+  });
+
+  // Create a pie chart for distribution of flags
+  
+    // Debugging: Output flags data to console
+    console.log('Flags data:', flags);
+  
+    // Create a pie chart for distribution of flags
+    var flagsCtx = document.getElementById('flagsChart').getContext('2d');
+    var flagsChart = new Chart(flagsCtx, {
+        type: 'pie',
+        data: {
+            labels: flags,
+            datasets: [{
+                label: 'Distribution of Flags',
+                data: flags,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+            responsive: false,
+            maintainAspectRatio: false
+        }
+    });
+  
+      // Create a bar chart for top 10 destination ports
+      var topPortsCtx = document.getElementById('topPortsChart').getContext('2d');
+      var topPortsChart = new Chart(topPortsCtx, {
+          type: 'bar',
+          data: {
+              labels: destinationPorts.slice(0, 10), // Take only the top 10 destination ports
+              datasets: [{
+                  label: 'Top 10 Destination Ports',
+                  data: destinationPorts.slice(0, 10), // Take only the top 10 destination ports
+                  backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              },
+              responsive: false,
+              maintainAspectRatio: false
+          }
+      });
+
+      // Create an area chart for distribution of destination ports over time
+      var portsOverTimeCtx = document.getElementById('portsOverTimeChart').getContext('2d');
+      var portsOverTimeChart = new Chart(portsOverTimeCtx, {
+          type: 'line',
+          data: {
+              labels: destinationPorts, // Assuming destination ports are used as time intervals
+              datasets: [{
+                  label: 'Distribution of Destination Ports Over Time',
+                  data: destinationPorts, // Assuming destination ports are used as time intervals
+                  backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              },
+              responsive: false,
+              maintainAspectRatio: false
+          }
+      });
+
+      // Create a radar chart for sequence numbers
+var sequenceNumbersRadarCtx = document.getElementById('sequenceNumbersRadarChart').getContext('2d');
+var sequenceNumbersRadarChart = new Chart(sequenceNumbersRadarCtx, {
+  type: 'radar',
+  data: {
+    labels: ["Packet 1", "Packet 2", "Packet 3", "Packet 4", "Packet 5"], // Assuming packet labels
+    datasets: [{
+      label: 'Sequence Numbers',
+      data: sequenceNumbers,
+      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      borderColor: 'rgba(255, 99, 132, 1)',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scale: {
+      ticks: {
+        beginAtZero: true
+      }
+    },
+    responsive: false,
+    maintainAspectRatio: false
+  }
+});
+
+// Create a scatter plot for payload length vs sequence number
+var scatterPlotCtx = document.getElementById('scatterPlot').getContext('2d');
+var scatterPlot = new Chart(scatterPlotCtx, {
+  type: 'scatter',
+  data: {
+    datasets: [{
+      label: 'Payload Length vs Sequence Number',
+      data: payloadLengths.map((value, index) => ({ x: sequenceNumbers[index], y: value })),
+      backgroundColor: 'rgba(54, 162, 235, 0.6)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      xAxes: [{
+        type: 'linear',
+        position: 'bottom',
+        scaleLabel: {
+          display: true,
+          labelString: 'Sequence Number'
+        }
+      }],
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'Payload Length'
+        }
+      }]
+    },
+    responsive: false,
+    maintainAspectRatio: false
+  }
+});
+
+</script>
+
+{% endblock body %}

@@ -1,0 +1,170 @@
+{% extends "base.html" %} {% block body %}
+
+<div class="main-panel">
+  <div class="content-wrapper">
+    <div class="row" id="proBanner">
+      <div class="col-12"></div>
+    </div>
+    <div class="d-xl-flex justify-content-between align-items-start">
+      <h2 class="text-dark font-weight-bold mb-2">HTTP Communication Overview</h2>
+      <div class="d-sm-flex justify-content-xl-between align-items-center mb-2">
+        <div class="dropdown ml-0 ml-md-4 mt-2 mt-lg-0">
+          <button
+            class="btn bg-white p-3 d-flex align-items-center"
+            type="button"
+            id="dropdownMenuButton1"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            24 Mar 2019 - 24 Mar 2019
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">HTTP Communication</h4>
+            <table class="table table-hover table-secondary">
+              <thead style="background: green">
+                <tr>
+                  <th>#</th>
+                  <th>HTTP Request</th>
+                  <!-- Additional Analysis Columns -->
+                  <th>User-Agent</th>
+                  <th>Protocol</th>
+                  <!-- Add more columns as needed -->
+                </tr>
+              </thead>
+              <tbody>
+                {% for request in http_communication %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ request }}</td>
+                  <!-- Populate additional analysis data -->
+                  <td>{{ user_agent_analyzation[loop.index - 1] }}</td>
+                  <td>{{ protocol_analyzation[loop.index - 1] }}</td>
+                  <!-- Add more columns as needed -->
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add a container for the charts -->
+    <div class="row">
+      <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">User Agent Distribution</h4>
+            <!-- Add a canvas element for the user agent chart -->
+            <canvas id="userAgentChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Protocol Distribution</h4>
+            <!-- Add a canvas element for the protocol chart -->
+            <canvas id="protocolChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Include Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    // Get the user agent and protocol data from the Flask template
+    var userAgents = {{ user_agent_analyzation | tojson }};
+    var protocols = {{ protocol_analyzation | tojson }};
+
+    // Initialize an empty object to store the count of each user agent
+    var userAgentCounts = {};
+
+    // Count the occurrences of each user agent
+    userAgents.forEach(function (userAgent) {
+        userAgentCounts[userAgent] = (userAgentCounts[userAgent] || 0) + 1;
+    });
+
+    // Initialize an empty object to store the count of each protocol
+    var protocolCounts = {};
+
+    // Count the occurrences of each protocol
+    protocols.forEach(function (protocol) {
+        protocolCounts[protocol] = (protocolCounts[protocol] || 0) + 1;
+    });
+
+    // Extract labels and data for the charts
+    var userAgentLabels = Object.keys(userAgentCounts);
+    var userAgentData = Object.values(userAgentCounts);
+    var protocolLabels = Object.keys(protocolCounts);
+    var protocolData = Object.values(protocolCounts);
+
+    // Create a bar chart for user agents
+    var userAgentCtx = document.getElementById('userAgentChart').getContext('2d');
+    var userAgentChart = new Chart(userAgentCtx, {
+        type: 'bar',
+        data: {
+            labels: userAgentLabels,
+            datasets: [{
+                label: 'User Agent Distribution',
+                data: userAgentData,
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    // Create a bar chart for protocols
+    var protocolCtx = document.getElementById('protocolChart').getContext('2d');
+    var protocolChart = new Chart(protocolCtx, {
+        type: 'bar',
+        data: {
+            labels: protocolLabels,
+            datasets: [{
+                label: 'Protocol Distribution',
+                data: protocolData,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    // Update the dropdown menu button with current date and time
+    var currentDateTime = new Date().toLocaleString();
+    document.getElementById("dropdownMenuButton1").innerHTML = currentDateTime;
+  </script>
+</div>
+
+{% endblock body %}
